@@ -72,7 +72,7 @@ const Plot = ({ fn, x1, x2 }: Props) => {
             const y = ys[i];
             ctx.fillRect(
                 ((x - x1) / (x2 - x1)) * canvas.width,
-                ((y - yMin) / (yMax - yMin)) * canvas.height,
+                (1 - (y - yMin) / (yMax - yMin)) * canvas.height,
                 1,
                 1,
             );

@@ -1,7 +1,11 @@
 import { useState } from 'react';
 import Plot from './components/Plot';
+import { preparePolynomial } from './util';
 
 function App() {
+    const [polynomial, setPolynomial] = useState<
+        ReturnType<typeof preparePolynomial>
+    >(preparePolynomial(1234, 3));
     const [range, setRange] = useState<{ x1: number; x2: number }>({
         x1: -2,
         x2: 2,
@@ -9,7 +13,7 @@ function App() {
     return (
         <>
             <Plot
-                fn={(x) => Math.pow(x, 3) + 2 * Math.pow(x, 2) - 3 * x}
+                fn={polynomial.fn}
                 x1={range.x1}
                 x2={range.x2}
             />
@@ -41,6 +45,18 @@ function App() {
                         }));
                     }}
                 />
+            </div>
+            <div>{polynomial.label}</div>
+            <div>f(0) = {polynomial.fn(0)}</div>
+            <div>f(1) = {polynomial.fn(1)} - 1st share</div>
+            <div>f(2) = {polynomial.fn(2)} - 2nd share</div>
+            <div>f(3) = {polynomial.fn(3)} - 3rd share</div>
+            <div>
+                <button
+                    onClick={() => setPolynomial(preparePolynomial(1234, 3))}
+                >
+                    reset polynomial
+                </button>
             </div>
         </>
     );
