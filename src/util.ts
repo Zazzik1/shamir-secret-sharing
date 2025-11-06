@@ -1,6 +1,17 @@
-const maxN = 1000;
+const maxN = 10;
 
-export function preparePolynomial(secret: number, numberOfShares: number) {
+/** f(x) */
+type FX = (x: number) => number;
+
+type Point = { x: number; y: number };
+
+export function preparePolynomial(
+    secret: number,
+    numberOfShares: number,
+): {
+    fn: FX;
+    label: string;
+} {
     const coefficients: number[] = [];
     let label = `f(x) = ${secret}`;
     for (let i = 0; i < numberOfShares; i++) {
@@ -20,4 +31,25 @@ export function preparePolynomial(secret: number, numberOfShares: number) {
         return y;
     }
     return { fn, label };
+}
+
+/**
+ * Returns a polynomial that interpolates a given set of data.
+ * https://en.wikipedia.org/wiki/Lagrange_polynomial
+ */
+export function lagrangeInterpolate(points: Point[]): FX {
+    function fn(x: number) {
+        let L = 0;
+        for (let j = 0; j < points.length; j++) {
+            let l = 1;
+            for (let m = 0; m < points.length; m++) {
+                if (j === m) continue;
+                l *= (x - points[m].x) / (points[j].x - points[m].x);
+            }
+            L += points[j].y * l;
+        }
+        return L;
+    }
+
+    return fn;
 }
