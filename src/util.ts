@@ -1,4 +1,4 @@
-const maxN = 10;
+const maxN = 1000;
 
 /** f(x) */
 type FX = (x: number) => number;
