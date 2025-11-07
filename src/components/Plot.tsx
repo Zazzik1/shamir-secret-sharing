@@ -45,7 +45,7 @@ const Plot = ({ fn, x1, x2 }: Props) => {
                 previousY = y;
             }
         }
-        ctx.strokeStyle = 'rgb(57, 75, 97)';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
         if (xAxisInterceptStep != null) {
             ctx.beginPath();
             ctx.moveTo((xAxisInterceptStep / steps) * canvas.width, 0);
@@ -66,7 +66,7 @@ const Plot = ({ fn, x1, x2 }: Props) => {
             ctx.closePath();
             ctx.stroke();
         }
-        ctx.fillStyle = 'white';
+        ctx.fillStyle = 'rgb(158, 190, 128)';
         for (let i = 0; i < steps; i++) {
             const x = xs[i];
             const y = ys[i];

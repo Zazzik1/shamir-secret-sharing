@@ -1,9 +1,9 @@
 const maxN = 1000;
 
 /** f(x) */
-type FX = (x: number) => number;
+export type FX = (x: number) => number;
 
-type Point = { x: number; y: number };
+export type Point = { x: number; y: number };
 
 export function preparePolynomial(
     secret: number,
@@ -14,7 +14,7 @@ export function preparePolynomial(
 } {
     const coefficients: number[] = [];
     let label = `f(x) = ${secret}`;
-    for (let i = 0; i < numberOfShares; i++) {
+    for (let i = 0; i < numberOfShares - 1; i++) {
         const coef = Math.round(Math.random() * maxN) - maxN / 2;
         coefficients.push(coef);
         if (coef > 0) {
@@ -25,7 +25,7 @@ export function preparePolynomial(
     }
     function fn(x: number): number {
         let y = secret;
-        for (let i = 1; i <= numberOfShares; i++) {
+        for (let i = 1; i <= numberOfShares - 1; i++) {
             y += Math.pow(x, i) * coefficients[i - 1];
         }
         return y;
