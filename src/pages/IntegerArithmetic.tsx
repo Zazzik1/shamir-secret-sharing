@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import Plot from '../components/Plot';
 import { FX, lagrangeInterpolate, Point, preparePolynomial } from '../util';
+import { Link } from 'react-router-dom';
 
 function IntegerArithmeticPage() {
     const [secret, setSecret] = useState(1234);
@@ -50,6 +51,7 @@ function IntegerArithmeticPage() {
                     Shamir's Secret Sharing - Integer arithmetic - share &
                     reconstruct demo
                 </div>
+                <Link to="/finite-field">finite field</Link>
                 <div>
                     secret:{' '}
                     <input
