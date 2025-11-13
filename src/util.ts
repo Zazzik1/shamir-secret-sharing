@@ -116,3 +116,42 @@ export function makeShares(
     }));
     return shares;
 }
+
+export function makeSharesStr(
+    secret: string,
+    numberOfShares: number,
+    prime: number,
+): string[] {
+    const shares: Record<string, number[]> = {};
+    for (let i = 0; i < secret.length; i++) {
+        const s = makeShares(secret.charCodeAt(i), numberOfShares, prime);
+        for (let j = 0; j < s.length; j++) {
+            if (shares[j]) {
+                shares[j].push(s[j].y);
+            } else {
+                shares[j] = [s[j].x, prime, s[j].y];
+            }
+        }
+    }
+    return Object.values(shares).map((share) => share.join(':'));
+}
+
+export function getSecretFromSharesStr(sharesStr: string[]): string {
+    const shares: number[][] = sharesStr.map((share) =>
+        share.split(':').map((str) => +str),
+    );
+    const prime = shares[0][1];
+    const secret: string[] = [];
+    for (let j = 2; j < shares[0].length; j++) {
+        const points: Point[] = [];
+        for (let i = 0; i < shares.length; i++) {
+            points.push({
+                x: shares[i][0],
+                y: shares[i][j],
+            });
+        }
+        const poly = lagrangeInterpolateMod(points, prime);
+        secret.push(String.fromCharCode(poly(0)));
+    }
+    return secret.join('');
+}

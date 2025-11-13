@@ -28,7 +28,12 @@ const FiniteFieldArithmetic = () => {
                 Shamir's Secret Sharing - Finite field arithmetic - share &
                 reconstruct demo
             </div>
-            <Link to="/">integer arithmetic</Link>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <Link to="/">integer arithmetic</Link>
+                <Link to="/finite-field-string">
+                    finite field arithmetic - share / reconstruct tool
+                </Link>
+            </div>
             <div>
                 prime ={' '}
                 <input

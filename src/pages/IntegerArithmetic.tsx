@@ -51,7 +51,12 @@ function IntegerArithmeticPage() {
                     Shamir's Secret Sharing - Integer arithmetic - share &
                     reconstruct demo
                 </div>
-                <Link to="/finite-field">finite field</Link>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <Link to="/finite-field">finite field arithmetic</Link>
+                    <Link to="/finite-field-string">
+                        finite field arithmetic - share / reconstruct tool
+                    </Link>
+                </div>
                 <div>
                     secret:{' '}
                     <input
