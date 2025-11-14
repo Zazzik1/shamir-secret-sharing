@@ -8,7 +8,7 @@ import FiniteFieldString from './pages/FiniteFieldString';
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
-        <BrowserRouter>
+        <BrowserRouter basename="/shamir-secret-sharing">
             <Routes>
                 <Route
                     path="/"
