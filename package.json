@@ -7,7 +7,7 @@
     "scripts": {
         "dev": "vite",
         "build": "tsc -b && vite build",
-        "test:ci": "echo todo",
+        "test:ci": "vitest run",
         "lint": "eslint .",
         "preview": "vite preview"
     },
@@ -25,8 +25,10 @@
         "eslint-plugin-react-hooks": "^5.0.0",
         "eslint-plugin-react-refresh": "^0.4.16",
         "globals": "^15.14.0",
+        "husky": "^9.1.7",
         "typescript": "~5.6.2",
         "typescript-eslint": "^8.18.2",
-        "vite": "^6.0.5"
+        "vite": "^6.0.5",
+        "vitest": "^3.2.4"
     }
 }
