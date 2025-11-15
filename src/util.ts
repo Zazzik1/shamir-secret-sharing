@@ -122,14 +122,18 @@ export function makeSharesStr(
     numberOfShares: number,
     prime: number,
 ): string[] {
-    const shares: Record<string, number[]> = {};
+    const shares: Record<string, string[]> = {};
     for (let i = 0; i < secret.length; i++) {
         const s = makeShares(secret.charCodeAt(i), numberOfShares, prime);
         for (let j = 0; j < s.length; j++) {
             if (shares[j]) {
-                shares[j].push(s[j].y);
+                shares[j].push(s[j].y.toString(36));
             } else {
-                shares[j] = [s[j].x, prime, s[j].y];
+                shares[j] = [
+                    s[j].x.toString(36),
+                    prime.toString(36),
+                    s[j].y.toString(36),
+                ];
             }
         }
     }
@@ -138,7 +142,7 @@ export function makeSharesStr(
 
 export function getSecretFromSharesStr(sharesStr: string[]): string {
     const shares: number[][] = sharesStr.map((share) =>
-        share.split(':').map((str) => +str),
+        share.split(':').map((str) => Number.parseInt(str, 36)),
     );
     const prime = shares[0][1];
     const secret: string[] = [];
