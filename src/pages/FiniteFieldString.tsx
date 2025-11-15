@@ -2,7 +2,8 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { getSecretFromSharesStr, makeSharesStr } from '../util';
 import { Link } from 'react-router-dom';
 
-const _PRIME = 2 ** 13 - 1; // https://en.wikipedia.org/wiki/Mersenne_prime
+// this prime must be large enough to fit unicode characters such as 🗝️ or ⭐
+const _PRIME = 2 ** 17 - 1; // https://en.wikipedia.org/wiki/Mersenne_prime
 const initialSecret = `hello world
 test 123
 super secret`;
