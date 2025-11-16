@@ -1,3 +1,5 @@
+import React from 'react';
+
 const maxN = 1000;
 
 /** f(x) */
@@ -10,19 +12,28 @@ export function preparePolynomial(
     numberOfShares: number,
 ): {
     fn: FX;
-    label: string;
+    label: React.ReactNode;
 } {
     const coefficients: number[] = [];
-    let label = `f(x) = ${secret}`;
+    const labelParts: React.ReactNode[] = [`f(x) = ${secret}`];
     for (let i = 0; i < numberOfShares - 1; i++) {
         const coef = Math.round(Math.random() * maxN) - maxN / 2;
         coefficients.push(coef);
         if (coef > 0) {
-            label += ` + ${coef}x^${i + 1}`;
+            labelParts.push(` + ${coef}x`);
+            if (i > 0) labelParts.push(<sup>{i + 1}</sup>);
         } else if (coef < 0) {
-            label += ` - ${Math.abs(coef)}x^${i + 1}`;
+            labelParts.push(` - ${Math.abs(coef)}x`);
+            if (i > 0) labelParts.push(<sup>{i + 1}</sup>);
         }
     }
+    const label = (
+        <>
+            {labelParts.map((part, id) => (
+                <React.Fragment key={id}>{part}</React.Fragment>
+            ))}
+        </>
+    );
     function fn(x: number): number {
         let y = secret;
         for (let i = 1; i <= numberOfShares - 1; i++) {
@@ -108,13 +119,23 @@ export function makeShares(
     secret: number,
     numberOfShares: number,
     prime: number,
-): Point[] {
+): { shares: Point[]; polynomial: { fn: FX; label: React.ReactNode } } {
     const polynomial = preparePolynomial(secret, numberOfShares);
     const shares: Point[] = Array.from({ length: numberOfShares }, (_, id) => ({
         x: id + 1,
         y: mod(polynomial.fn(id + 1), prime),
     }));
-    return shares;
+    return {
+        shares,
+        polynomial: {
+            fn: polynomial.fn,
+            label: (
+                <>
+                    {polynomial.label} (mod {prime})
+                </>
+            ),
+        },
+    };
 }
 
 export function makeSharesStr(
@@ -124,7 +145,11 @@ export function makeSharesStr(
 ): string[] {
     const shares: Record<string, string[]> = {};
     for (let i = 0; i < secret.length; i++) {
-        const s = makeShares(secret.charCodeAt(i), numberOfShares, prime);
+        const { shares: s } = makeShares(
+            secret.charCodeAt(i),
+            numberOfShares,
+            prime,
+        );
         for (let j = 0; j < s.length; j++) {
             if (shares[j]) {
                 shares[j].push(s[j].y.toString(36));

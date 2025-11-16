@@ -3,6 +3,7 @@ import Plot from '../components/Plot';
 import { FX, lagrangeInterpolate, Point, preparePolynomial } from '../util';
 import { Link } from 'react-router-dom';
 import { Button, Heading, NumberInput } from '../components/shared';
+import Table from '../components/Table';
 
 function IntegerArithmeticPage() {
     const [secret, setSecret] = useState(1234);
@@ -11,7 +12,7 @@ function IntegerArithmeticPage() {
         ReturnType<typeof preparePolynomial>
     >({
         fn: () => 1,
-        label: 'f(x) = 1',
+        label: <>f(x) = 1</>,
     });
     const [range, setRange] = useState<{ x1: number; x2: number }>({
         x1: -2,
@@ -113,13 +114,24 @@ function IntegerArithmeticPage() {
                             x1={range.x1}
                             x2={range.x2}
                         />
-                        <div>{polynomial.label}</div>
-                        <div>f(0) = {polynomial.fn(0)}</div>
-                        {shares.map((share, i) => (
-                            <div key={i}>
-                                f({share.x}) = {share.y} - share {i + 1}
-                            </div>
-                        ))}
+                        <div style={{ marginBottom: '8px', color: 'yellow' }}>
+                            {polynomial.label}
+                        </div>
+                        <Table
+                            schema={[
+                                {
+                                    key: 'x',
+                                    label: 'x (-nth share)',
+                                    align: 'right',
+                                },
+                                {
+                                    key: 'y',
+                                    label: 'f(x)',
+                                    align: 'right',
+                                },
+                            ]}
+                            data={shares}
+                        />
                     </div>
                     <div>
                         <div style={{ fontWeight: '600' }}>
@@ -130,11 +142,32 @@ function IntegerArithmeticPage() {
                             x1={range.x1}
                             x2={range.x2}
                         />
-                        <div>
-                            secret from polynomial recreated based on shares:
-                            f(0) = {recreatedF0} (
-                            {recreatedF0 === secret ? 'OK' : 'NOK'})
-                        </div>
+                        <Table
+                            schema={[
+                                {
+                                    key: 'name',
+                                    label: 'secret',
+                                    align: 'left',
+                                },
+                                {
+                                    key: 'value',
+                                    label: 'f(0)',
+                                    align: 'right',
+                                },
+                            ]}
+                            data={[
+                                {
+                                    name: 'from original polynomial',
+                                    value: secret,
+                                },
+                                {
+                                    name: 'from polynomial reconstructed based on shares',
+                                    value: `${recreatedF0} (${
+                                        recreatedF0 === secret ? 'OK' : 'NOK'
+                                    })`,
+                                },
+                            ]}
+                        />
                     </div>
                 </div>
                 <div
@@ -144,6 +177,7 @@ function IntegerArithmeticPage() {
                         gap: '16px',
                         flexWrap: 'wrap',
                         alignItems: 'center',
+                        marginBottom: '16px',
                     }}
                 >
                     <div>x1, x2&nbsp;</div>

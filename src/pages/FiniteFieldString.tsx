@@ -45,7 +45,7 @@ const FiniteFieldString = () => {
         setSharesToReconstruct(shares);
     }, [shares, numberOfShares]);
     return (
-        <div style={{ padding: '8px' }}>
+        <div style={{ padding: '8px', paddingTop: 0 }}>
             <div
                 style={{
                     display: 'flex',
@@ -53,7 +53,7 @@ const FiniteFieldString = () => {
                     alignItems: 'center',
                 }}
             >
-                <Heading>
+                <Heading size="md">
                     Shamir's Secret Sharing &gt; Finite field arithmetic &gt;
                     share & reconstruct tool
                 </Heading>
@@ -67,9 +67,12 @@ const FiniteFieldString = () => {
                 </div>
                 <hr style={{ width: '600px' }} />
             </div>
-            <div style={{ textAlign: 'center', color: 'lightgreen' }}>
+            <Heading
+                size="sm"
+                style={{ textAlign: 'center' }}
+            >
                 Share
-            </div>
+            </Heading>
             <div style={{ marginTop: '8px', fontWeight: '600' }}>
                 Secret
                 <br />
@@ -108,9 +111,12 @@ const FiniteFieldString = () => {
                 and the secret
             </div>
             <hr />
-            <div style={{ textAlign: 'center', color: 'lightgreen' }}>
+            <Heading
+                size="sm"
+                style={{ textAlign: 'center' }}
+            >
                 Reconstruct
-            </div>
+            </Heading>
             <div style={{ marginTop: '8px', fontWeight: '600' }}>
                 Number of shares
                 <NumberInput
@@ -177,7 +183,7 @@ const FiniteFieldString = () => {
                     fontSize: '14px',
                     backgroundColor: 'rgb(19, 22, 14)',
                     color: 'rgb(186, 211, 146)',
-                    fontFamily: 'monospace',
+                    fontFamily: 'RobotoMono, monospace',
                     borderRadius: '2px',
                     padding: '8px',
                     border: '1px solid rgb(46, 53, 35)',
@@ -194,7 +200,7 @@ const FiniteFieldString = () => {
                         Result will appear here after you click Reconstruct.
                     </span>
                 ) : (
-                    <pre>{reconstructedSecret}</pre>
+                    <pre style={{ margin: 0 }}>{reconstructedSecret}</pre>
                 )}
             </div>
         </div>

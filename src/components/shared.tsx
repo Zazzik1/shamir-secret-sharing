@@ -10,9 +10,9 @@ type NumberInputProps = {
 
 const NumberInputWrapper = styled.div`
     * {
-        font-family: monospace;
-        font-size: 18px;
-        padding: 6px 8px;
+        font-family: RobotoMono, monospace;
+        font-size: 14px;
+        padding: 8px 10px;
         background-color: rgb(5 5 30);
         border: 1px solid rgb(17 17 89);
         color: rgb(197, 208, 245);
@@ -95,7 +95,7 @@ export const NumberInput = ({
 export const Button = styled.button`
     font-family: Calibri;
     font-size: 16px;
-    padding: 6px 8px;
+    padding: 8px 10px;
     background-color: #314931;
     border: 1px solid #618a61;
     color: white;
@@ -123,31 +123,34 @@ export const ShareInput = styled.input`
         border-color: yellow;
     }
 
-    padding: 8px 16px;
+    padding: 8px 10px;
     color: rgb(197, 208, 245);
     background-color: rgb(5 5 30);
     border: 1px solid rgb(17 17 89);
     border-radius: 2px;
-    font-family: monospace;
+    font-family: RobotoMono, monospace;
     font-size: 14px;
+    &::placeholder {
+        color: rgb(148, 148, 148);
+        font-style: italic;
+    }
 `;
 
 export const ShareOutput = styled.div`
     background-color: rgb(5 5 30);
     color: rgb(197, 208, 245);
-    padding: 8px 16px;
+    padding: 8px 10px;
     width: max-content;
     line-break: anywhere;
     max-width: 100%;
     box-sizing: border-box;
     border-radius: 4px;
-    font-family: monospace;
+    font-family: RobotoMono, monospace;
     font-size: 14px;
 `;
 
-export const Heading = styled.div`
-    font-size: 22px;
-    font-family: Arial;
+export const Heading = styled.div<{ size?: 'md' | 'sm' }>`
+    font-size: ${({ size }) => (size === 'sm' ? '16px' : '20px')};
     color: #e0e084;
     padding: 8px 0;
 `;
@@ -158,11 +161,11 @@ export const TextArea = styled.textarea`
         border-color: yellow;
     }
 
-    padding: 8px 16px;
+    padding: 8px 10px;
     color: rgb(197, 208, 245);
     background-color: rgb(5 5 30);
     border: 1px solid rgb(17 17 89);
     border-radius: 2px;
-    font-family: monospace;
+    font-family: RobotoMono, monospace;
     font-size: 14px;
 `;

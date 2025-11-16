@@ -3,6 +3,7 @@ import Plot from '../components/Plot';
 import { lagrangeInterpolateMod, makeShares } from '../util';
 import { Link } from 'react-router-dom';
 import { Button, Heading, NumberInput } from '../components/shared';
+import Table from '../components/Table';
 
 const _PRIME = 2 ** 13 - 1; // https://en.wikipedia.org/wiki/Mersenne_prime
 
@@ -12,7 +13,7 @@ const FiniteFieldArithmetic = () => {
     const [numberOfShares, setNumberOfShares] = useState(3);
     const [error, setError] = useState<string | null>(null);
 
-    const shares = makeShares(secret, numberOfShares, prime);
+    const { shares, polynomial } = makeShares(secret, numberOfShares, prime);
     const recreatedPolynomial = lagrangeInterpolateMod(shares, prime);
     let recreatedSecret: number | null = null;
     try {
@@ -78,18 +79,29 @@ const FiniteFieldArithmetic = () => {
                     />
                 </div>
             </div>
-            <div style={{ marginTop: '8px', fontWeight: '600' }}>Shares</div>
-            <div>
-                {shares.map((p) => (
-                    <div
-                        key={p.x}
-                        style={{ display: 'flex', gap: '32px' }}
-                    >
-                        <div>x: {p.x}</div>
-                        <div>y: {p.y}</div>
-                    </div>
-                ))}
+            <div
+                style={{
+                    marginTop: '8px',
+                    fontWeight: '600',
+                }}
+            >
+                Shares
             </div>
+            <Table
+                schema={[
+                    {
+                        key: 'x',
+                        label: 'x (-nth share)',
+                        align: 'right',
+                    },
+                    {
+                        key: 'y',
+                        label: 'f(x)',
+                        align: 'right',
+                    },
+                ]}
+                data={shares}
+            />
             {error != null && <div style={{ color: 'red' }}>{error}</div>}
             {recreatedSecret != null && (
                 <>
@@ -102,6 +114,9 @@ const FiniteFieldArithmetic = () => {
                             x1={-2}
                             x2={2}
                         />
+                    </div>
+                    <div style={{ marginBottom: '8px', color: 'yellow' }}>
+                        {polynomial.label}
                     </div>
                     <div>
                         secret from reconstructed polynomial: f(0) ={' '}
