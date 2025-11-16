@@ -83,8 +83,8 @@ const Plot = ({ fn, x1, x2 }: Props) => {
     return (
         <canvas
             style={{ border: '1px solid rgb(59, 32, 32)' }}
-            width={600}
-            height={600}
+            width={500}
+            height={500}
             ref={ref}
         >
             Plot

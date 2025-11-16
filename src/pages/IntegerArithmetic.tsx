@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import Plot from '../components/Plot';
 import { FX, lagrangeInterpolate, Point, preparePolynomial } from '../util';
 import { Link } from 'react-router-dom';
+import { Button, Heading, NumberInput } from '../components/shared';
 
 function IntegerArithmeticPage() {
     const [secret, setSecret] = useState(1234);
@@ -47,43 +48,66 @@ function IntegerArithmeticPage() {
                     alignItems: 'center',
                 }}
             >
-                <div style={{ fontWeight: '600', color: 'rgb(158, 190, 128)' }}>
-                    Shamir's Secret Sharing - Integer arithmetic - share &
+                <Heading>
+                    Shamir's Secret Sharing &gt; Integer arithmetic &gt; share &
                     reconstruct demo
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <Link to="/finite-field">finite field arithmetic</Link>
+                </Heading>
+                <div
+                    style={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        gap: '8px',
+                    }}
+                >
+                    <Link to="/finite-field">
+                        <Button>finite field arithmetic</Button>
+                    </Link>
                     <Link to="/finite-field-string">
-                        finite field arithmetic - share / reconstruct tool
+                        <Button>finite field - share / reconstruct tool</Button>
                     </Link>
                 </div>
-                <div>
-                    secret:{' '}
-                    <input
-                        type="number"
-                        value={secret}
-                        onChange={(e) => setSecret(e.target.valueAsNumber)}
-                    />
-                </div>
-                <div>
-                    number of shares:{' '}
-                    <input
-                        type="number"
-                        value={numberOfShares}
-                        min="2"
-                        onChange={(e) =>
-                            setNumberOfShares(e.target.valueAsNumber)
-                        }
-                    />
-                </div>
-                <div>
-                    <button onClick={handleResetPolynomial}>
-                        reset polynomial
-                    </button>
-                </div>
-                <div style={{ display: 'flex', gap: '32px' }}>
+                <hr style={{ width: '600px' }} />
+                <div
+                    style={{
+                        marginTop: '8px',
+                        display: 'flex',
+                        gap: '16px',
+                        alignItems: 'end',
+                        flexWrap: 'wrap',
+                    }}
+                >
+                    <div style={{ fontWeight: '600' }}>
+                        Secret
+                        <NumberInput
+                            value={secret}
+                            onChange={setSecret}
+                        />
+                    </div>
+                    <div style={{ fontWeight: '600' }}>
+                        Number of shares
+                        <NumberInput
+                            value={numberOfShares}
+                            onChange={setNumberOfShares}
+                            min={2}
+                            max={20}
+                        />
+                    </div>
                     <div>
-                        <div>Original f(x)</div>
+                        <Button onClick={handleResetPolynomial}>
+                            reset polynomial
+                        </Button>
+                    </div>
+                </div>
+                <div
+                    style={{
+                        display: 'flex',
+                        gap: '32px',
+                        marginTop: '8px',
+                        flexWrap: 'wrap',
+                    }}
+                >
+                    <div>
+                        <div style={{ fontWeight: '600' }}>Original f(x)</div>
                         <Plot
                             fn={polynomial.fn}
                             x1={range.x1}
@@ -98,7 +122,9 @@ function IntegerArithmeticPage() {
                         ))}
                     </div>
                     <div>
-                        <div>Reconstructed f(x)</div>
+                        <div style={{ fontWeight: '600' }}>
+                            Reconstructed f(x)
+                        </div>
                         <Plot
                             fn={recreatedPolynomial.fn}
                             x1={range.x1}
@@ -111,14 +137,20 @@ function IntegerArithmeticPage() {
                         </div>
                     </div>
                 </div>
-                <div style={{ marginTop: '16px' }}>
-                    x1, x2&nbsp;
-                    <input
-                        type="number"
+                <div
+                    style={{
+                        marginTop: '16px',
+                        display: 'flex',
+                        gap: '16px',
+                        flexWrap: 'wrap',
+                        alignItems: 'center',
+                    }}
+                >
+                    <div>x1, x2&nbsp;</div>
+                    <NumberInput
                         value={range.x1}
-                        step="0.2"
-                        onChange={(e) => {
-                            const value = e.target.valueAsNumber;
+                        step={0.2}
+                        onChange={(value) => {
                             if (value >= range.x2) return;
                             setRange((old) => ({
                                 ...old,
@@ -126,12 +158,10 @@ function IntegerArithmeticPage() {
                             }));
                         }}
                     />
-                    <input
-                        type="number"
+                    <NumberInput
                         value={range.x2}
-                        step="0.2"
-                        onChange={(e) => {
-                            const value = e.target.valueAsNumber;
+                        step={0.2}
+                        onChange={(value) => {
                             if (value <= range.x1) return;
                             setRange((old) => ({
                                 ...old,

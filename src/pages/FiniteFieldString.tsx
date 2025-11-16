@@ -1,6 +1,14 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { getSecretFromSharesStr, makeSharesStr } from '../util';
 import { Link } from 'react-router-dom';
+import {
+    Button,
+    Heading,
+    NumberInput,
+    ShareInput,
+    ShareOutput,
+    TextArea,
+} from '../components/shared';
 
 // this prime must be large enough to fit unicode characters such as 🗝️ or ⭐
 const _PRIME = 2 ** 17 - 1; // https://en.wikipedia.org/wiki/Mersenne_prime
@@ -40,76 +48,58 @@ const FiniteFieldString = () => {
         <div style={{ padding: '8px' }}>
             <div
                 style={{
-                    textAlign: 'center',
-                    fontWeight: '600',
-                    color: 'rgb(158, 190, 128)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
                 }}
             >
-                Shamir's Secret Sharing - Finite field arithmetic - share &
-                reconstruct tool
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <Link to="/">integer arithmetic</Link>
-                <Link to="/finite-field">finite field arithmetic</Link>
+                <Heading>
+                    Shamir's Secret Sharing &gt; Finite field arithmetic &gt;
+                    share & reconstruct tool
+                </Heading>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                    <Link to="/">
+                        <Button>integer arithmetic</Button>
+                    </Link>
+                    <Link to="/finite-field">
+                        <Button>finite field arithmetic</Button>
+                    </Link>
+                </div>
+                <hr style={{ width: '600px' }} />
             </div>
             <div style={{ textAlign: 'center', color: 'lightgreen' }}>
                 Share
             </div>
-            <div>
-                secret ={' '}
-                <textarea
+            <div style={{ marginTop: '8px', fontWeight: '600' }}>
+                Secret
+                <br />
+                <TextArea
                     value={secret}
                     onChange={(e) => setSecret(e.target.value)}
                     rows={8}
-                    cols={40}
-                    style={{
-                        backgroundColor: 'rgb(19, 22, 14)',
-                        color: 'white',
-                        fontFamily: 'monospace',
-                        borderRadius: '2px',
-                    }}
+                    cols={60}
                 />
             </div>
-            <div>
-                number of shares ={' '}
-                <input
-                    type="number"
+            <div style={{ marginTop: '8px', fontWeight: '600' }}>
+                Number of shares
+                <NumberInput
                     value={numberOfShares}
+                    onChange={setNumberOfShares}
                     min={2}
-                    onChange={(e) => {
-                        const value = +e.target.value;
-                        if (Number.isNaN(value) || value < 2) return 2;
-                        setNumberOfShares(value);
-                    }}
+                    max={12}
                 />
             </div>
-            <div>shares:</div>
+            <div style={{ marginTop: '8px', fontWeight: '600' }}>Shares</div>
             <div
                 style={{
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '16px',
-                    padding: '8px',
+                    padding: '8px 0',
                 }}
             >
                 {shares.map((share, id) => (
-                    <div
-                        key={id}
-                        style={{
-                            backgroundColor: 'rgb(12, 12, 31)',
-                            color: 'rgb(197, 208, 245)',
-                            padding: '8px 16px',
-                            width: 'max-content',
-                            lineBreak: 'anywhere',
-                            maxWidth: '100%',
-                            boxSizing: 'border-box',
-                            borderRadius: '4px',
-                            fontFamily: 'monospace',
-                            fontSize: '14px',
-                        }}
-                    >
-                        {share}
-                    </div>
+                    <ShareOutput key={id}>{share}</ShareOutput>
                 ))}
             </div>
             <div style={{ fontStyle: 'italic' }}>
@@ -120,18 +110,16 @@ const FiniteFieldString = () => {
             <div style={{ textAlign: 'center', color: 'lightgreen' }}>
                 Reconstruct
             </div>
-            <div>
-                number of shares ={' '}
-                <input
-                    type="number"
+            <div style={{ marginTop: '8px', fontWeight: '600' }}>
+                Number of shares
+                <NumberInput
                     value={numberOfSharesToReconstruct}
-                    min={2}
-                    onChange={(e) => {
-                        const value = +e.target.value;
-                        if (Number.isNaN(value) || value < 2) return 2;
+                    onChange={(value) => {
                         setNumberOfSharesToReconstruct(value);
                         setSharesToReconstruct((old) => old.slice(0, value));
                     }}
+                    min={2}
+                    max={12}
                 />
             </div>
             <div
@@ -139,13 +127,13 @@ const FiniteFieldString = () => {
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '8px',
-                    padding: '8px',
+                    padding: '8px 0',
                 }}
             >
                 {Array.from(
                     { length: numberOfSharesToReconstruct },
                     (_, id) => (
-                        <input
+                        <ShareInput
                             key={id}
                             placeholder={`Paste the share ${id + 1} here`}
                             value={sharesToReconstruct[id] ?? ''}
@@ -156,31 +144,28 @@ const FiniteFieldString = () => {
                                     return newShares;
                                 })
                             }
-                            style={{
-                                padding: '8px 16px',
-                                backgroundColor: 'rgb(12, 12, 31)',
-                                color: 'rgb(197, 208, 245)',
-                                border: '1px solid rgb(26, 26, 61)',
-                                borderRadius: '2px',
-                                fontFamily: 'monospace',
-                                fontSize: '14px',
-                            }}
                         />
                     ),
                 )}
             </div>
-            <button onClick={loadShares}>Load shares from previous step</button>
-            <button
-                onClick={reconstructSecret}
-                disabled={
-                    sharesToReconstruct.reduce((acc, share) => {
-                        return share.length ? acc + 1 : acc;
-                    }, 0) < numberOfSharesToReconstruct
-                }
-            >
-                Reconstruct
-            </button>
-            <div style={{ marginTop: '16px' }}>Reconstructed secret: </div>
+            <div style={{ display: 'flex', gap: '8px' }}>
+                <Button onClick={loadShares}>
+                    Load shares from previous step
+                </Button>
+                <Button
+                    onClick={reconstructSecret}
+                    disabled={
+                        sharesToReconstruct.reduce((acc, share) => {
+                            return share.length ? acc + 1 : acc;
+                        }, 0) < numberOfSharesToReconstruct
+                    }
+                >
+                    Reconstruct
+                </Button>
+            </div>
+            <div style={{ marginTop: '8px', fontWeight: '600' }}>
+                Reconstructed secret
+            </div>
             <div
                 style={{
                     maxWidth: 'calc(100% - 16px)',
@@ -195,7 +180,6 @@ const FiniteFieldString = () => {
                     borderRadius: '2px',
                     padding: '8px',
                     border: '1px solid rgb(46, 53, 35)',
-                    margin: '8px',
                     boxSizing: 'border-box',
                 }}
             >

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Plot from '../components/Plot';
 import { lagrangeInterpolateMod, makeShares } from '../util';
 import { Link } from 'react-router-dom';
+import { Button, Heading, NumberInput } from '../components/shared';
 
 const _PRIME = 2 ** 13 - 1; // https://en.wikipedia.org/wiki/Mersenne_prime
 
@@ -23,57 +24,62 @@ const FiniteFieldArithmetic = () => {
         }
     }
     return (
-        <div>
-            <div style={{ fontWeight: '600', color: 'rgb(158, 190, 128)' }}>
-                Shamir's Secret Sharing - Finite field arithmetic - share &
-                reconstruct demo
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <Link to="/">integer arithmetic</Link>
+        <div
+            style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+            }}
+        >
+            <Heading>
+                Shamir's Secret Sharing &gt; Finite field arithmetic &gt; share
+                & reconstruct demo
+            </Heading>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                <Link to="/">
+                    <Button>integer arithmetic</Button>
+                </Link>
                 <Link to="/finite-field-string">
-                    finite field arithmetic - share / reconstruct tool
+                    <Button>finite field - share / reconstruct tool</Button>
                 </Link>
             </div>
-            <div>
-                prime ={' '}
-                <input
-                    type="number"
-                    value={prime}
-                    onChange={(e) => {
-                        const value = +e.target.value;
-                        if (Number.isNaN(value)) return;
-                        setPrime(value);
-                    }}
-                />
+            <hr style={{ width: '600px' }} />
+            <div
+                style={{
+                    display: 'flex',
+                    gap: '16px',
+                    alignItems: 'end',
+                    flexWrap: 'wrap',
+                    marginTop: '8px',
+                }}
+            >
+                <div style={{ fontWeight: '600' }}>
+                    Prime
+                    <NumberInput
+                        value={prime}
+                        min={3}
+                        onChange={setPrime}
+                    />
+                </div>
+                <div style={{ fontWeight: '600' }}>
+                    Secret
+                    <NumberInput
+                        value={secret}
+                        onChange={setSecret}
+                        max={prime - 1}
+                    />
+                </div>
+                <div style={{ fontWeight: '600' }}>
+                    Number of shares
+                    <NumberInput
+                        value={numberOfShares}
+                        onChange={setNumberOfShares}
+                        min={2}
+                    />
+                </div>
             </div>
+            <div style={{ marginTop: '8px', fontWeight: '600' }}>Shares</div>
             <div>
-                secret ={' '}
-                <input
-                    type="number"
-                    value={secret}
-                    onChange={(e) => {
-                        const value = +e.target.value;
-                        if (Number.isNaN(value)) return;
-                        setSecret(value);
-                    }}
-                />
-            </div>
-            <div>
-                number of shares ={' '}
-                <input
-                    type="number"
-                    value={numberOfShares}
-                    min={2}
-                    onChange={(e) => {
-                        const value = +e.target.value;
-                        if (Number.isNaN(value) || value < 2) return 2;
-                        setNumberOfShares(value);
-                    }}
-                />
-            </div>
-            <hr />
-            <div>shares:</div>
-            <div style={{}}>
                 {shares.map((p) => (
                     <div
                         key={p.x}
@@ -84,16 +90,19 @@ const FiniteFieldArithmetic = () => {
                     </div>
                 ))}
             </div>
-            <hr />
             {error != null && <div style={{ color: 'red' }}>{error}</div>}
             {recreatedSecret != null && (
                 <>
-                    <div>Reconstructed f(x)</div>
-                    <Plot
-                        fn={recreatedPolynomial}
-                        x1={-2}
-                        x2={2}
-                    />
+                    <div style={{ marginTop: '8px', fontWeight: '600' }}>
+                        Reconstructed f(x)
+                    </div>
+                    <div>
+                        <Plot
+                            fn={recreatedPolynomial}
+                            x1={-2}
+                            x2={2}
+                        />
+                    </div>
                     <div>
                         secret from reconstructed polynomial: f(0) ={' '}
                         {recreatedSecret}
