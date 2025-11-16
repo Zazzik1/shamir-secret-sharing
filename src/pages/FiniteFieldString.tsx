@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { getSecretFromSharesStr, makeSharesStr } from '../util';
 import { Link } from 'react-router-dom';
 import {
@@ -78,6 +78,7 @@ const FiniteFieldString = () => {
                     onChange={(e) => setSecret(e.target.value)}
                     rows={8}
                     cols={60}
+                    data-test-name="secret"
                 />
             </div>
             <div style={{ marginTop: '8px', fontWeight: '600' }}>
@@ -182,6 +183,7 @@ const FiniteFieldString = () => {
                     border: '1px solid rgb(46, 53, 35)',
                     boxSizing: 'border-box',
                 }}
+                data-test-name="reconstructed-secret"
             >
                 {error != null ? (
                     <span style={{ color: 'red', fontStyle: 'italic' }}>
@@ -192,12 +194,7 @@ const FiniteFieldString = () => {
                         Result will appear here after you click Reconstruct.
                     </span>
                 ) : (
-                    reconstructedSecret.split('\n').map((el, id) => (
-                        <React.Fragment key={id}>
-                            {el}
-                            <br />
-                        </React.Fragment>
-                    ))
+                    <pre>{reconstructedSecret}</pre>
                 )}
             </div>
         </div>
