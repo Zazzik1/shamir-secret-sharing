@@ -12,7 +12,7 @@
         "test:ci": "vitest run",
         "test:cypress:run": "cypress run",
         "test:cypress:open": "cypress open",
-        "test:cypress:run:dev": "concurrently --kill-others \"npm run dev\" \"npm run test:cypress:run\""
+        "test:cypress:run:dev": "concurrently --kill-others --success first \"npm run dev\" \"npm run test:cypress:run\""
     },
     "dependencies": {
         "@emotion/styled": "^11.14.1",
