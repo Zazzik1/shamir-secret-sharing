@@ -34,6 +34,12 @@ jobs:
             - name: Unit tests
               run: npm run test:ci
 
+            - name: Cypress tests
+              uses: cypress-io/github-action@v6
+              with:
+                  start: npm run dev
+                  wait-on: 'http://localhost:5137'
+
             - name: Create build
               run: npm run build
 
