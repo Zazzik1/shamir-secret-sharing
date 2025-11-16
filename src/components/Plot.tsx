@@ -77,7 +77,6 @@ const Plot = ({ fn, x1, x2 }: Props) => {
                 1,
             );
         }
-        console.log({ yMax, yMin, x1, x2 });
     }, [x1, x2, fn]);
 
     return (
