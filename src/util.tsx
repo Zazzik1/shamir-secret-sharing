@@ -184,3 +184,41 @@ export function getSecretFromSharesStr(sharesStr: string[]): string {
     }
     return secret.join('');
 }
+
+export function getShareMetadata(share: string): {
+    x: number;
+    prime: number;
+} {
+    const colonIndex1st = share.indexOf(':');
+    const colonIndex2nd = share.indexOf(':', colonIndex1st + 1);
+    return {
+        x: Number.parseInt(share.slice(0, colonIndex1st), 36),
+        prime: Number.parseInt(
+            share.slice(colonIndex1st + 1, colonIndex2nd),
+            36,
+        ),
+    };
+}
+
+export function validateSharesStr(shares: string[]): void {
+    const xs = new Set<number>();
+    const { prime, x } = getShareMetadata(shares[0]);
+    xs.add(x);
+    for (let i = 1; i < shares.length; i++) {
+        const { prime: primei, x: xi } = getShareMetadata(shares[i]);
+
+        if (xs.has(xi)) {
+            throw new Error(
+                `Two shares have the same x value (x=${x}). Each share must have a unique first segment.`,
+            );
+        }
+        if (prime !== primei) {
+            throw new Error(
+                `Share ${
+                    i + 1
+                } was generated with a different prime than share ${i} (${prime} vs ${primei}). This is likely an error - all shares must have the same second segment.`,
+            );
+        }
+        xs.add(x);
+    }
+}

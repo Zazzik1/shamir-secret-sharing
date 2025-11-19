@@ -1,5 +1,13 @@
 import styled from '@emotion/styled';
 
+export const BORDER_COLOR = 'rgb(25, 41, 65)';
+export const BACKGROUND_COLOR = 'rgb(4, 7, 12)';
+export const BACKGROUND_COLOR_SUCCESS = '#324b32';
+export const CARD_BACKGROUND_COLOR = 'rgb(8, 15, 24)';
+export const CARD_BACKGROUND_COLOR_LIGHTER = 'rgb(15, 28, 48)';
+export const INPUT_TEXT_COLOR = 'rgb(197, 208, 245)';
+export const HEADING_TEXT_COLOR = '#d5e6ca';
+
 type NumberInputProps = {
     value: number;
     onChange: (value: number) => void;
@@ -13,35 +21,35 @@ const NumberInputWrapper = styled.div`
         font-family: RobotoMono, monospace;
         font-size: 14px;
         padding: 8px 10px;
-        background-color: rgb(5 5 30);
-        border: 1px solid rgb(17 17 89);
-        color: rgb(197, 208, 245);
+        background-color: ${BACKGROUND_COLOR};
+        border: 1px solid ${BORDER_COLOR};
+        color: ${INPUT_TEXT_COLOR};
     }
     input {
         width: 150px;
         border-radius: 4px 0 0 4px;
         outline: none;
         &:focus {
-            border-color: yellow;
+            border-color: ${HEADING_TEXT_COLOR};
         }
     }
     button {
-        outline-color: yellow;
+        outline-color: ${HEADING_TEXT_COLOR};
         border-left: 0;
-        width: 3.5ch;
-        background-color: rgb(9 9 51);
+        width: 4ch;
+        background-color: ${CARD_BACKGROUND_COLOR_LIGHTER};
         &:last-child {
             border-radius: 0 4px 4px 0;
         }
         &:not(&:disabled) {
             cursor: pointer;
             &:hover {
-                background-color: rgb(7, 7, 19);
+                background-color: ${CARD_BACKGROUND_COLOR};
                 transition: 50ms ease;
             }
         }
         &:disabled {
-            background-color: #121212;
+            background-color: #1d1d1d;
             color: #4e4e4e;
         }
     }
@@ -96,15 +104,16 @@ export const Button = styled.button`
     font-family: Calibri;
     font-size: 16px;
     padding: 8px 10px;
-    background-color: #314931;
-    border: 1px solid #618a61;
+    background-color: ${CARD_BACKGROUND_COLOR_LIGHTER};
+    border: 1px solid ${BORDER_COLOR};
     color: white;
     outline: none;
+    border-radius: 10px;
     &:not(&:disabled) {
         cursor: pointer;
+        transition: 50ms ease;
         &:hover {
-            background-color: #395539;
-            transition: 50ms ease;
+            background-color: ${BACKGROUND_COLOR_SUCCESS};
         }
     }
     &:disabled {
@@ -113,34 +122,34 @@ export const Button = styled.button`
         border-color: #525252;
     }
     &:focus {
-        border-color: yellow;
+        border-color: ${HEADING_TEXT_COLOR};
     }
 `;
 
 export const ShareInput = styled.input`
     outline: none;
     &:focus {
-        border-color: yellow;
+        border-color: ${HEADING_TEXT_COLOR};
     }
 
     padding: 8px 10px;
-    color: rgb(197, 208, 245);
-    background-color: rgb(5 5 30);
-    border: 1px solid rgb(17 17 89);
+    color: ${INPUT_TEXT_COLOR};
+    background-color: ${BACKGROUND_COLOR};
+    border: 1px solid ${BORDER_COLOR};
     border-radius: 2px;
     font-family: RobotoMono, monospace;
     font-size: 14px;
     &::placeholder {
-        color: rgb(148, 148, 148);
+        color: rgb(113, 123, 156);
         font-style: italic;
     }
 `;
 
 export const ShareOutput = styled.div`
-    background-color: rgb(5 5 30);
-    color: rgb(197, 208, 245);
+    background-color: ${CARD_BACKGROUND_COLOR_LIGHTER};
+    color: ${INPUT_TEXT_COLOR};
     padding: 8px 10px;
-    width: max-content;
+    width: 100%;
     line-break: anywhere;
     max-width: 100%;
     box-sizing: border-box;
@@ -151,21 +160,54 @@ export const ShareOutput = styled.div`
 
 export const Heading = styled.div<{ size?: 'md' | 'sm' }>`
     font-size: ${({ size }) => (size === 'sm' ? '16px' : '20px')};
-    color: #e0e084;
+    color: ${HEADING_TEXT_COLOR};
     padding: 8px 0;
+    padding-left: 16px;
+    font-family: OpenSans;
 `;
 
 export const TextArea = styled.textarea`
     outline: none;
     &:focus {
-        border-color: yellow;
+        border-color: ${HEADING_TEXT_COLOR};
     }
 
     padding: 8px 10px;
-    color: rgb(197, 208, 245);
-    background-color: rgb(5 5 30);
-    border: 1px solid rgb(17 17 89);
+    color: ${INPUT_TEXT_COLOR};
+    background-color: ${BACKGROUND_COLOR};
+    border: 1px solid ${BORDER_COLOR};
     border-radius: 2px;
     font-family: RobotoMono, monospace;
     font-size: 14px;
+    width: 100%;
+    box-sizing: border-box;
+    resize: vertical;
 `;
+
+const FooterWrapper = styled.div`
+    border-top: 1px solid ${BORDER_COLOR};
+    width: 100%;
+    text-align: right;
+    padding: 8px 16px;
+    box-sizing: border-box;
+    a {
+        color: ${HEADING_TEXT_COLOR};
+        text-decoration: none;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+`;
+
+export const Footer = () => {
+    return (
+        <FooterWrapper>
+            <a
+                href="https://github.com/Zazzik1/shamir-secret-sharing"
+                target="_blank"
+            >
+                github
+            </a>
+        </FooterWrapper>
+    );
+};
