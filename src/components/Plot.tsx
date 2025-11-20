@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import {
     BORDER_COLOR,
     CARD_BACKGROUND_COLOR_LIGHTER,
+    HEADING_TEXT_COLOR,
     INPUT_TEXT_COLOR,
 } from './shared';
 import styled from '@emotion/styled';
@@ -34,6 +35,7 @@ const CanvasWrapper = styled.div`
         border-radius: 2px;
         white-space: nowrap;
         z-index: 1;
+        pointer-events: none;
     }
 `;
 
@@ -43,18 +45,23 @@ type Box = {
     y: string;
     canvasX: number;
     canvasY: number;
+    flipX: boolean;
+    flipY: boolean;
 };
 
 const Plot = ({ fn, x1, x2 }: Props) => {
     const [box, setBox] = useState<Box>({
         isVisible: false,
-        x: '0',
-        y: '0',
+        x: (0).toFixed(3),
+        y: (0).toFixed(3),
         canvasX: 0,
         canvasY: 0,
+        flipX: false,
+        flipY: false,
     });
     const ref = useRef<HTMLCanvasElement>(null);
     const overlayRef = useRef<HTMLCanvasElement>(null);
+    const boxRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const canvas = ref.current;
@@ -129,13 +136,7 @@ const Plot = ({ fn, x1, x2 }: Props) => {
             );
         }
 
-        let isMouseOver = false;
-        const handleMouseEnter = () => {
-            isMouseOver = true;
-            setBox((old) => ({ ...old, isVisible: true }));
-        };
         const handleMouseLeave = () => {
-            isMouseOver = false;
             overlayCtx.clearRect(
                 0,
                 0,
@@ -145,7 +146,6 @@ const Plot = ({ fn, x1, x2 }: Props) => {
             setBox((old) => ({ ...old, isVisible: false }));
         };
         const handleMouseMove = (e: MouseEvent) => {
-            if (!isMouseOver) return;
             const canvasXNormalized = e.offsetX / canvas.clientWidth; // 0-1
             // canvas.clientWidth is a real width, not just the pixel count (plots are squeezed on mobile devices)
             const x = canvasXNormalized * (x2 - x1) + x1;
@@ -158,6 +158,13 @@ const Plot = ({ fn, x1, x2 }: Props) => {
                 overlayCanvas.width,
                 overlayCanvas.height,
             );
+            overlayCtx.fillStyle = HEADING_TEXT_COLOR;
+            overlayCtx.beginPath();
+            for (let y = 0; y < canvas.height; y += 6) {
+                overlayCtx.fillRect(canvasXNormalized * canvas.width, y, 1, 1);
+            }
+            overlayCtx.closePath();
+            overlayCtx.stroke();
             overlayCtx.strokeStyle = INPUT_TEXT_COLOR;
             overlayCtx.fillStyle = INPUT_TEXT_COLOR;
             overlayCtx.beginPath();
@@ -170,21 +177,27 @@ const Plot = ({ fn, x1, x2 }: Props) => {
             );
             overlayCtx.fill();
             overlayCtx.stroke();
+            const boxEl = boxRef.current;
+            const boxWidth = boxEl?.clientWidth || 100;
+            const boxHeight = boxEl?.clientHeight || 100;
+            const flipX = e.offsetX + boxWidth >= canvas.clientWidth;
+            const flipY = canvasY + boxHeight >= canvas.clientHeight;
             setBox((old) => ({
                 ...old,
+                isVisible: true,
                 x: x.toFixed(3),
                 y: y.toFixed(3),
                 canvasY:
                     canvas.clientHeight -
                     canvasYNormalized * canvas.clientHeight,
                 canvasX: e.offsetX,
+                flipX,
+                flipY,
             }));
         };
-        overlayCanvas.addEventListener('mouseenter', handleMouseEnter);
         overlayCanvas.addEventListener('mouseleave', handleMouseLeave);
         overlayCanvas.addEventListener('mousemove', handleMouseMove);
         return () => {
-            overlayCanvas.removeEventListener('mouseenter', handleMouseEnter);
             overlayCanvas.removeEventListener('mouseleave', handleMouseLeave);
             overlayCanvas.removeEventListener('mousemove', handleMouseMove);
         };
@@ -192,17 +205,21 @@ const Plot = ({ fn, x1, x2 }: Props) => {
 
     return (
         <CanvasWrapper>
-            {box.isVisible && (
-                <div
-                    style={{
-                        left: `${box.canvasX}px`,
-                        top: `${box.canvasY}px`,
-                    }}
-                >
-                    <div>x: {box.x}</div>
-                    <div>y: {box.y}</div>
-                </div>
-            )}
+            <div
+                ref={boxRef}
+                style={{
+                    left: `${box.canvasX}px`,
+                    top: `${box.canvasY}px`,
+                    transform: `translate(${box.flipX ? '-100%' : '0%'}, ${
+                        box.flipY ? '-100%' : '0%'
+                    })`,
+                    display: box.isVisible ? 'block' : 'none',
+                }}
+            >
+                <div>x: {box.x}</div>
+                <div>y: {box.y}</div>
+            </div>
+
             <canvas
                 width={500}
                 height={500}
