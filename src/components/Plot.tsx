@@ -146,10 +146,12 @@ const Plot = ({ fn, x1, x2 }: Props) => {
         };
         const handleMouseMove = (e: MouseEvent) => {
             if (!isMouseOver) return;
-            const x = (e.offsetX / canvas.width) * (x2 - x1) + x1;
+            const canvasXNormalized = e.offsetX / canvas.clientWidth; // 0-1
+            // canvas.clientWidth is a real width, not just the pixel count (plots are squeezed on mobile devices)
+            const x = canvasXNormalized * (x2 - x1) + x1;
             const y = fn(x);
-            const canvasY =
-                canvas.height - ((y - yMin) / (yMax - yMin)) * canvas.height;
+            const canvasYNormalized = (y - yMin) / (yMax - yMin); // 0-1; calculated per value from f(x), not for Y mouse position on the chart!
+            const canvasY = canvas.height - canvasYNormalized * canvas.height;
             overlayCtx.clearRect(
                 0,
                 0,
@@ -159,14 +161,22 @@ const Plot = ({ fn, x1, x2 }: Props) => {
             overlayCtx.strokeStyle = INPUT_TEXT_COLOR;
             overlayCtx.fillStyle = INPUT_TEXT_COLOR;
             overlayCtx.beginPath();
-            overlayCtx.arc(e.offsetX, canvasY, 6, 0, 2 * Math.PI);
+            overlayCtx.arc(
+                canvasXNormalized * canvas.width,
+                canvasY,
+                6,
+                0,
+                2 * Math.PI,
+            );
             overlayCtx.fill();
             overlayCtx.stroke();
             setBox((old) => ({
                 ...old,
                 x: x.toFixed(3),
                 y: y.toFixed(3),
-                canvasY,
+                canvasY:
+                    canvas.clientHeight -
+                    canvasYNormalized * canvas.clientHeight,
                 canvasX: e.offsetX,
             }));
         };
