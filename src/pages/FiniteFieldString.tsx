@@ -38,10 +38,20 @@ const Content = styled.div`
     flex-direction: column;
     align-items: center;
 
+    > div {
+        padding: 16px 64px;
+    }
+
     @media (max-width: 1264px) {
         width: auto;
         border-left: none;
         border-right: none;
+    }
+
+    @media (max-width: 600px) {
+        > div {
+            padding: 16px 8px;
+        }
     }
 `;
 
@@ -121,7 +131,7 @@ const FiniteFieldString = () => {
                 <div
                     style={{
                         borderBottom: `1px solid ${BORDER_COLOR}`,
-                        padding: '16px 64px',
+
                         paddingTop: 0,
                         width: '100%',
                         boxSizing: 'border-box',
@@ -175,7 +185,6 @@ const FiniteFieldString = () => {
                 </div>
                 <div
                     style={{
-                        padding: '16px 64px',
                         paddingTop: 0,
                         width: '100%',
                         boxSizing: 'border-box',

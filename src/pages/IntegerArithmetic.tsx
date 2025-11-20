@@ -5,13 +5,27 @@ import { Link } from 'react-router-dom';
 import {
     BORDER_COLOR,
     Button,
-    CARD_BACKGROUND_COLOR,
     Footer,
     Heading,
     HEADING_TEXT_COLOR,
     NumberInput,
 } from '../components/shared';
 import Table from '../components/Table';
+import styled from '@emotion/styled';
+
+const Content = styled.div`
+    flex-grow: 1;
+    background-color: CARD_BACKGROUND_COLOR;
+    border-left: 1px solid ${BORDER_COLOR};
+    border-right: 1px solid ${BORDER_COLOR};
+    padding: 16px 64px;
+
+    @media (max-width: 600px) {
+        border-left: none;
+        border-right: none;
+        padding: 16px 8px;
+    }
+`;
 
 function IntegerArithmeticPage() {
     const [secret, setSecret] = useState(1234);
@@ -87,15 +101,7 @@ function IntegerArithmeticPage() {
                         </Link>
                     </div>
                 </div>
-                <div
-                    style={{
-                        flexGrow: 1,
-                        backgroundColor: CARD_BACKGROUND_COLOR,
-                        borderLeft: `1px solid ${BORDER_COLOR}`,
-                        borderRight: `1px solid ${BORDER_COLOR}`,
-                        padding: '16px 64px',
-                    }}
-                >
+                <Content>
                     <div
                         style={{
                             marginTop: '8px',
@@ -242,7 +248,7 @@ function IntegerArithmeticPage() {
                             }}
                         />
                     </div>
-                </div>
+                </Content>
                 <Footer />
             </div>
         </>

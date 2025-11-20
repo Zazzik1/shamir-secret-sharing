@@ -22,6 +22,12 @@ const Content = styled.div`
     border-left: 1px solid ${BORDER_COLOR};
     border-right: 1px solid ${BORDER_COLOR};
     padding: 16px 64px;
+
+    @media (max-width: 600px) {
+        border-left: none;
+        border-right: none;
+        padding: 16px 8px;
+    }
 `;
 
 const FiniteFieldArithmetic = () => {
