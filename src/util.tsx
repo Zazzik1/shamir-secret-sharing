@@ -128,7 +128,7 @@ export function makeShares(
     return {
         shares,
         polynomial: {
-            fn: polynomial.fn,
+            fn: (x: number) => mod(polynomial.fn(x), prime),
             label: (
                 <>
                     {polynomial.label} (mod {prime})

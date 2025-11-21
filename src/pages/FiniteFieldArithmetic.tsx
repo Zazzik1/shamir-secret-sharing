@@ -15,6 +15,7 @@ import Table from '../components/Table';
 import styled from '@emotion/styled';
 
 const _PRIME = 2 ** 13 - 1; // https://en.wikipedia.org/wiki/Mersenne_prime
+const INITIAL_SECRET = 1234;
 
 const Content = styled.div`
     flex-grow: 1;
@@ -32,7 +33,7 @@ const Content = styled.div`
 
 const FiniteFieldArithmetic = () => {
     const [prime, setPrime] = useState(_PRIME);
-    const [secret, setSecret] = useState(1234);
+    const [secret, setSecret] = useState(INITIAL_SECRET);
     const [numberOfShares, setNumberOfShares] = useState(3);
     const [error, setError] = useState<string | null>(null);
 
@@ -45,8 +46,10 @@ const FiniteFieldArithmetic = () => {
         if (err instanceof Error) {
             setError(err.message);
             setPrime(_PRIME);
+            setSecret(INITIAL_SECRET);
         }
     }
+    const polynomialF0 = polynomial.fn(0);
     return (
         <div
             style={{
@@ -101,6 +104,7 @@ const FiniteFieldArithmetic = () => {
                             onChange={(n) => {
                                 setError(null);
                                 setPrime(n);
+                                if (secret >= n) setSecret(n - 1);
                             }}
                         />
                     </div>
@@ -187,7 +191,9 @@ const FiniteFieldArithmetic = () => {
                             data={[
                                 {
                                     name: 'from original polynomial',
-                                    value: secret,
+                                    value: `${polynomialF0} (${
+                                        polynomialF0 === secret ? 'OK' : 'NOK'
+                                    })`,
                                 },
                                 {
                                     name: 'from polynomial reconstructed based on shares',
@@ -203,15 +209,43 @@ const FiniteFieldArithmetic = () => {
                 </div>
                 {recreatedSecret != null && (
                     <>
-                        <div style={{ marginTop: '16px', fontWeight: '600' }}>
-                            Reconstructed f(x)
-                        </div>
-                        <div>
-                            <Plot
-                                fn={recreatedPolynomial}
-                                x1={-2}
-                                x2={2}
-                            />
+                        <div
+                            style={{
+                                display: 'flex',
+                                gap: '32px',
+                                flexWrap: 'wrap',
+                            }}
+                        >
+                            <div>
+                                <div
+                                    style={{
+                                        marginTop: '16px',
+                                        fontWeight: '600',
+                                    }}
+                                >
+                                    Original f(x)
+                                </div>
+                                <Plot
+                                    fn={polynomial.fn}
+                                    x1={-2}
+                                    x2={2}
+                                />
+                            </div>
+                            <div>
+                                <div
+                                    style={{
+                                        marginTop: '16px',
+                                        fontWeight: '600',
+                                    }}
+                                >
+                                    Reconstructed f(x)
+                                </div>
+                                <Plot
+                                    fn={recreatedPolynomial}
+                                    x1={-2}
+                                    x2={2}
+                                />
+                            </div>
                         </div>
                     </>
                 )}

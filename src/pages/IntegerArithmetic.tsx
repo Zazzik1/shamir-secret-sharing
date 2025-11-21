@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import {
     BORDER_COLOR,
     Button,
+    CARD_BACKGROUND_COLOR,
     Footer,
     Heading,
     HEADING_TEXT_COLOR,
@@ -15,7 +16,7 @@ import styled from '@emotion/styled';
 
 const Content = styled.div`
     flex-grow: 1;
-    background-color: CARD_BACKGROUND_COLOR;
+    background-color: ${CARD_BACKGROUND_COLOR};
     border-left: 1px solid ${BORDER_COLOR};
     border-right: 1px solid ${BORDER_COLOR};
     padding: 16px 64px;
@@ -60,6 +61,7 @@ function IntegerArithmeticPage() {
         handleResetPolynomial();
     }, [handleResetPolynomial]);
 
+    const polynomialF0 = polynomial.fn(0);
     const recreatedF0 = recreatedPolynomial.fn(0);
 
     return (
@@ -199,7 +201,11 @@ function IntegerArithmeticPage() {
                                 data={[
                                     {
                                         name: 'from original polynomial',
-                                        value: secret,
+                                        value: `${polynomialF0} (${
+                                            polynomialF0 === secret
+                                                ? 'OK'
+                                                : 'NOK'
+                                        })`,
                                     },
                                     {
                                         name: 'from polynomial reconstructed based on shares',
